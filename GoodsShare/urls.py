@@ -27,4 +27,6 @@ urlpatterns = [
     path('getmygoods/',views.getMyGoods),
     path('collect/',views.collect),
     path('accept/',views.accept),
+    path('remark/',views.remark),
+    path('analysis/',views.analysis)
 ]

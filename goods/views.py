@@ -14,8 +14,8 @@ def pub(request):
     jsondata = json.loads(body)
     goods1 = models.Goods(name=jsondata['name'],trade_type=jsondata['trade_type'],
                           price=jsondata['price'],type=jsondata['type'],
-                          qq=jsondata['qq'],phone=jsondata['phone'],description=jsondata['description'],publisher=jsondata['publisher'])
-    goods1.location="123124123"
+                          qq=jsondata['qq'],phone=jsondata['phone'],description=jsondata['description'],publisher=jsondata['publisher'],location=jsondata['location'])
+
     goods1.save()
     return HttpResponse('1')
 
@@ -114,3 +114,27 @@ def accept(request):
     userid = params.get("userId")
     models.Goods.objects.filter(id=goodsid).update(accepter=userid)
     return HttpResponse('1')
+
+def remark(request):
+    body = request.body.decode(encoding="utf-8")
+    jsondata = json.loads(body)
+    goodsid = jsondata['goodsId']
+    score = jsondata['score']
+    remark = jsondata['remark']
+    models.Goods.objects.filter(goodsid=goodsid).update(remark=str(score)+remark)
+    return HttpResponse('1')
+
+def analysis(request):
+    data = {}
+    type = []
+    type1 = models.Goods.objects.filter(trade_type=1).count()
+    type2 = models.Goods.objects.filter(trade_type=2).count()
+    type.append(type1)
+    type.append(type2)
+    goods_type = []
+    for i in range(6):
+        goods_type.append(models.Goods.objects.filter(type=i+1).count())
+    data['type'] = type
+    data['goods_type'] = goods_type
+    return HttpResponse(json.dumps(data),content_type="application/json")
+
